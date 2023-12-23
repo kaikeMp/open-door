@@ -4,7 +4,7 @@ import '../../../../injection_container.dart';
 import '../../domain/repositories/open_door_repository.dart';
 
 class OpenDoorRepositoryImpl implements OpenDoorRepository {
-  final http.Client _client;
+  late final http.Client _client;
 
   OpenDoorRepositoryImpl({http.Client? client})
       : _client = client ?? sl.get<http.Client>();
