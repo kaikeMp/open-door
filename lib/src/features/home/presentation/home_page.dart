@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:open_door/src/features/home/domain/repositories/open_door_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../injection_container.dart';
+import 'cubit/home_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +17,7 @@ class _HomePageState extends State<HomePage>
   late AnimationController _animationController;
   late Animation<Alignment> _topAlignAnimation;
   late Animation<Alignment> _bottomAlignAnimation;
-  final _openDoorRepository = sl.get<OpenDoorRepository>();
+  final _cubit = sl.get<HomeCubit>();
 
   @override
   void initState() {
@@ -91,9 +93,10 @@ class _HomePageState extends State<HomePage>
       bottom: false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Open Door'),
+          title: const Text('Open Door'),
         ),
         body: Stack(
+          alignment: Alignment.center,
           children: [
             AnimatedBuilder(
               animation: _animationController,
@@ -112,10 +115,49 @@ class _HomePageState extends State<HomePage>
                 );
               },
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Open Door'),
+            BlocBuilder<HomeCubit, HomeState>(
+              bloc: _cubit,
+              builder: (context, state) {
+                if (state is HomeLoading) {
+                  return const CircularProgressIndicator(color: Colors.black);
+                }
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async => _cubit.openDoor(),
+                      child: const Text('Abrir porta'),
+                    ),
+                    const SizedBox(height: 20),
+                    if (state is HomeError)
+                      Text(
+                        'Error: ${state.error}',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      )
+                  ],
+                );
+              },
+            ),
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    final data = snapshot.data;
+
+                    if (data == null || snapshot.hasError) {
+                      return const SizedBox();
+                    }
+
+                    return Text(data.buildNumber);
+                  },
+                ),
               ),
             ),
           ],

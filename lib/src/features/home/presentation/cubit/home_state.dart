@@ -8,4 +8,8 @@ class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {}
 
-class HomeError extends HomeState {}
+class HomeError extends HomeState {
+  final String error;
+
+  HomeError({required this.error});
+}
