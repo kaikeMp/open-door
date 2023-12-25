@@ -16,6 +16,7 @@ class OpenDoorRepositoryImpl implements OpenDoorRepository {
       url,
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
       },
     ).timeout(const Duration(seconds: 5));
     return;
