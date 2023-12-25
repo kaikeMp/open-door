@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage>
                       return const SizedBox();
                     }
 
-                    return Text(data.buildNumber);
+                    return Text(data.version);
                   },
                 ),
               ),
