@@ -11,7 +11,7 @@ class OpenDoorRepositoryImpl implements OpenDoorRepository {
 
   @override
   Future<void> openDoor() async {
-    final url = Uri.parse('http://192.168.0.35/command/?cmd=getdate');
+    final url = Uri.parse('http://192.168.0.45/command/?cmd=getdate');
     await _client.get(
       url,
       headers: {
